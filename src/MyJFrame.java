@@ -5,16 +5,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import static java.lang.Math.*;
+
 public class MyJFrame extends JFrame {
 
     private MyJPanel njp = new MyJPanel();
     private Timer timer;
-    private Timer timer2;
-    private int deltaX = 5;
-    private int deltaY = 5;
+    private int step = 5;
+    private int radius = 125;
+    private int i = 0;
 
     public MyJFrame() {
-        super("Практическая работа");
+        super("Title");
         initComponents();
     }
 
@@ -31,20 +33,6 @@ public class MyJFrame extends JFrame {
 
         njp.requestFocusInWindow();
 
-        timer = new Timer(50, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                njp.moveSquare(deltaX, 0);
-            }
-        });
-
-        timer2 = new Timer(50, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                njp.moveSquare(-deltaX, 0);
-            }
-        });
-
         njp.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {}
@@ -58,22 +46,33 @@ public class MyJFrame extends JFrame {
                         timer.stop();
                     }
                 }
-                if (e.getKeyCode() == KeyEvent.VK_2) {
-                    if (!timer2.isRunning()) {
-                        timer2.start();
-                    } else {
-                        timer2.stop();
-                    }
-                }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {}
         });
+
+        timer = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (i >= 360)
+                    i = 0;
+                i += 2;
+                System.out.println(i);
+                int newX = (int) Math.round(200 + radius * Math.cos(i * Math.PI / 180));
+                int newY = (int) Math.round(200 + radius * Math.sin(i * Math.PI / 180));
+                setNewCoordinates(newX, newY);
+                System.out.println(newX + " " + newY);
+            }
+        });
     }
 
-    public void moveSquare(int deltaX, int deltaY) {
-        njp.moveSquare(deltaX, deltaY);
+    public void setNewCoordinatesStep(int stepX, int stepY) {
+        njp.setNewCoordinates(stepX, stepY);
+    }
+
+    public void setNewCoordinates(int newX, int newY) {
+        njp.setNewCoordinates(newX, newY);
     }
 
     public static void main(String[] args) {

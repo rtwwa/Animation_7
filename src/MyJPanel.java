@@ -3,8 +3,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class MyJPanel extends JPanel {
-    private int x = 0;
-    private int y = 0;
+    private int myX = 0;
+    private int myY = 0;
+    private final int step = 20;
 
     public MyJPanel() {
         setFocusable(true);
@@ -23,56 +24,68 @@ class MyJPanel extends JPanel {
     }
 
     private void keyPressedMovement(KeyEvent event) {
-        int i = 20;
 
         switch (event.getKeyCode()) {
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_D:
-                if (x + 100 + i > getWidth())
+                if (myX + 100 + step > getWidth())
                     break;
-                x += i;
+                myX += step;
                 break;
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_A:
-                if (x - i < 0)
+                if (myX - step < 0)
                     break;
-                x -= i;
+                myX -= step;
                 break;
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_S:
-                if (y + 100 + i > getHeight())
+                if (myY + 100 + step > getHeight())
                     break;
-                y += i;
+                myY += step;
                 break;
             case KeyEvent.VK_UP:
             case KeyEvent.VK_W:
-                if (y - i < 0)
+                if (myY - step < 0)
                     break;
-                y -= i;
+                myY -= step;
                 break;
         }
-
         repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.green);
-        g.fillRect(x + 25, y, 35, 85);
-        g.setColor(Color.yellow);
-        g.fillRect(x, y + 25, 85, 35);
+        g.setColor(Color.black);
+        g.fillOval(myX, myY, 100, 100);
         g.setColor(Color.blue);
-        g.fillOval(x + 25, y + 25, 35, 35);
+        g.fillOval(myX, myY + 25, 100, 50);
+        g.setColor(Color.red);
+        g.fillRect(myX + 37, myY + 37, 25, 25);
     }
 
-    public void moveSquare(int deltaX, int deltaY) {
-        int newX = x + deltaX;
-        int newY = y + deltaY;
+    public void setNewCoordinatesStep(int stepX, int stepY) {
+        int newX = myX + stepX;
+        int newY = myY + stepY;
 
-        if (newX >= 0 && newX + 100 <= getWidth() && newY >= 0 && newY + 100 <= getHeight()) {
-            x = x + deltaX;
-            y = y + deltaY;
+        boolean validX = newX >= 0 && newX + 100 <= getWidth();
+        boolean validY = newY >= 0 && newY + 100 <= getHeight();
+
+        if (validX && validY) {
+            myX = newX;
+            myY = newY;
+            repaint();
+        }
+    }
+
+    public void setNewCoordinates(int newX, int newY) {
+        boolean validX = newX >= 0 && newX + 100 <= getWidth();
+        boolean validY = newY >= 0 && newY + 100 <= getHeight();
+
+        if (validX && validY) {
+            myX = newX;
+            myY = newY;
             repaint();
         }
     }
